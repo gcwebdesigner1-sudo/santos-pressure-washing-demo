@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Santos Pressure Washing | Northern California — Open 24 Hours</title>
+
+  <!-- Favicon: water drop SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230a1628'/%3E%3Cpath d='M16 6 C16 6 8 16 8 21 a8 8 0 0 0 16 0 C24 16 16 6 16 6Z' fill='%2300c2ff'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:  #0a1628;
+      --blue:  #0070e0;
+      --blue2: #005bbf;
+      --cyan:  #00c2ff;
+      --white: #ffffff;
+      --bone:  #f5f7fa;
+      --text:  #1e293b;
+      --gray:  #64748b;
+      --gold:  #f59e0b;
+      --footer:#060e1c;
+      --sh:    0 4px 24px rgba(0,0,0,.12);
+      --sh2:   0 8px 40px rgba(0,0,0,.2);
+      --r:     12px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--white); overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+
+    /* ═══════════════════════════════════════
+       INTRO SPLASH
+    ═══════════════════════════════════════ */
+    #intro {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0;
+      animation: introFadeOut 0.7s ease-in 2.4s forwards;
+      pointer-events: none;
+    }
+    .intro-glow {
+      position: absolute;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,112,224,0.35) 0%, transparent 70%);
+      animation: glowPulse 1.8s ease-out 0.2s forwards;
+      opacity: 0;
+    }
+    .intro-logo-wrap {
+      position: relative; z-index: 1;
+      animation: logoIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+      overflow: hidden;
+    }
+    .intro-logo-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s ease 0.8s forwards;
+    }
+    .intro-tagline {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45);
+      margin-top: 18px; position: relative; z-index: 1;
+      animation: logoIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s both;
+    }
+    @keyframes logoIn    { from { opacity:0; transform:scale(0.78); } to { opacity:1; transform:scale(1); } }
+    @keyframes glowPulse { 0%{opacity:0;transform:scale(0.6);} 50%{opacity:1;transform:scale(1.2);} 100%{opacity:0;transform:scale(1.5);} }
+    @keyframes shimmer   { from{background-position:200% 0;} to{background-position:-200% 0;} }
+    @keyframes introFadeOut { from{opacity:1;} to{opacity:0;pointer-events:none;} }
+
+    /* Santos SVG logo (shared between intro + nav) */
+    .santos-logo-svg { display: block; }
+
+    /* ═══════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════ */
+    nav {
+      position: sticky; top: 0; z-index: 900;
+      background: var(--navy);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.35);
+      padding: 0.75rem 5%;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: rgba(255,255,255,0.8);
+      font-size: 0.9rem; font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-call {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue); color: white; padding: 10px 20px; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 700; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-call:hover { background: var(--blue2); transform: translateY(-1px); }
+    #hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    #hamburger span { display: block; width: 24px; height: 2px; background: white; border-radius: 2px; margin: 5px 0; }
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      #hamburger { display: block; }
+    }
+
+    /* ═══════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════ */
+    .hero {
+      min-height: 94vh; position: relative;
+      display: flex; align-items: center;
+      padding: 80px 5% 80px; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        linear-gradient(110deg, rgba(10,22,40,0.92) 40%, rgba(10,22,40,0.45) 100%),
+        url('https://images.unsplash.com/photo-1605146768851-eda79da39897?w=1920&q=85&fit=crop') center/cover no-repeat;
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+    .hero:hover .hero-bg { transform: scale(1.0); }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(0,112,224,0.2); border: 1px solid rgba(0,194,255,0.3);
+      color: var(--cyan); padding: 8px 20px; border-radius: 100px;
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      backdrop-filter: blur(6px); margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 900; line-height: 1.05;
+      color: var(--white); margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: normal; color: var(--cyan); }
+    .hero-sub { font-size: 1.08rem; color: rgba(255,255,255,0.8); max-width: 500px; line-height: 1.7; margin-bottom: 36px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-blue {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--blue); color: white; padding: 15px 32px; border-radius: 8px;
+      font-size: 1rem; font-weight: 700; text-decoration: none;
+      box-shadow: 0 4px 24px rgba(0,112,224,0.45); transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-blue:hover { background: var(--blue2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,112,224,0.55); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 9px;
+      background: transparent; color: var(--white); padding: 15px 28px; border-radius: 8px;
+      font-size: 1rem; font-weight: 600; text-decoration: none;
+      border: 1.5px solid rgba(255,255,255,0.3); transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+    .scroll-hint {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .scroll-hint i { animation: bob 2s ease-in-out infinite; font-size: 0.9rem; }
+    @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(6px);} }
+
+    /* ═══════════════════════════════════════
+       TRUST STRIP
+    ═══════════════════════════════════════ */
+    .trust {
+      background: rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 5%;
+      display: flex; justify-content: center; align-items: center;
+      gap: 0; flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 28px; font-size: 0.82rem; font-weight: 600;
+      color: rgba(255,255,255,0.75);
+    }
+    .trust-item i { color: var(--cyan); font-size: 0.85rem; }
+    .trust-div { width: 1px; height: 24px; background: rgba(255,255,255,0.12); }
+
+    /* ═══════════════════════════════════════
+       STATS STRIP
+    ═══════════════════════════════════════ */
+    .stats {
+      background: var(--blue); padding: 40px 5%;
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1px;
+    }
+    .stat-item { text-align: center; padding: 12px; }
+    .stat-num { font-size: 2.6rem; font-weight: 900; color: white; line-height: 1; }
+    .stat-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.72); margin-top: 4px; }
+    @media (max-width:600px) { .stats { grid-template-columns: 1fr 1fr; } }
+
+    /* ═══════════════════════════════════════
+       BEFORE & AFTER
+    ═══════════════════════════════════════ */
+    .ba-section { background: var(--navy); padding: 96px 5%; }
+    .sec-tag { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px; }
+    .sec-title { font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 900; line-height: 1.1; margin-bottom: 12px; }
+    .sec-sub { font-size: 1rem; color: rgba(255,255,255,0.6); max-width: 520px; line-height: 1.7; }
+    .ba-head { margin-bottom: 56px; }
+    .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .ba-card { }
+    .ba-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .ba-container {
+      position: relative; aspect-ratio: 4/3; border-radius: 16px;
+      overflow: hidden; cursor: ew-resize; user-select: none;
+      box-shadow: var(--sh2);
+    }
+    .ba-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ba-after { clip-path: inset(0 50% 0 0); transition: clip-path 0s; }
+    .ba-divider {
+      position: absolute; top: 0; bottom: 0; width: 3px; background: white;
+      left: 50%; transform: translateX(-50%); z-index: 3; pointer-events: none;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+    .ba-handle {
+      position: absolute; top: 50%; left: 50%; z-index: 4;
+      transform: translate(-50%,-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: white; box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--navy); pointer-events: none;
+    }
+    .ba-range {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: ew-resize; z-index: 5;
+      -webkit-appearance: none; appearance: none;
+      margin: 0;
+    }
+    .ba-tags {
+      position: absolute; bottom: 14px; left: 0; right: 0;
+      display: flex; justify-content: space-between; padding: 0 14px; z-index: 6; pointer-events: none;
+    }
+    .ba-tag {
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 100px;
+    }
+    .ba-tag.before { background: rgba(0,0,0,0.55); color: rgba(255,255,255,0.75); }
+    .ba-tag.after  { background: var(--cyan); color: var(--navy); }
+    @media (max-width:700px) { .ba-grid { grid-template-columns: 1fr; } }
+
+    /* ═══════════════════════════════════════
+       SERVICES
+    ═══════════════════════════════════════ */
+    .services-section { background: var(--bone); padding: 96px 5%; }
+    .services-section .sec-tag { color: var(--blue); }
+    .services-section .sec-title { color: var(--text); }
+    .services-section .sec-sub { color: var(--gray); }
+    .svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px,1fr)); gap: 24px; margin-top: 56px; }
+    .svc-card {
+      background: white; border-radius: var(--r); overflow: hidden;
+      box-shadow: var(--sh); transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .svc-card:hover { transform: translateY(-5px); box-shadow: var(--sh2); }
+    .svc-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+    .svc-body { padding: 22px 22px 26px; }
+    .svc-icon { font-size: 1.7rem; margin-bottom: 10px; display: block; }
+    .svc-card h3 { font-size: 1.08rem; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .svc-card p { font-size: 0.86rem; color: var(--gray); line-height: 1.65; }
+    .svc-badge { display: inline-block; margin-top: 12px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; background: rgba(0,112,224,0.1); color: var(--blue); }
+
+    /* ═══════════════════════════════════════
+       WHY
+    ═══════════════════════════════════════ */
+    .why-section { background: white; padding: 96px 5%; }
+    .why-section .sec-tag { color: var(--blue); }
+    .why-section .sec-title { color: var(--text); }
+    .why-section .sec-sub { color: var(--gray); }
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1280px; margin: 0 auto; }
+    .why-img-wrap { position: relative; }
+    .why-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 16px; display: block; box-shadow: var(--sh2); }
+    .why-float {
+      position: absolute; bottom: -20px; left: -20px;
+      background: var(--navy); border-radius: 14px; padding: 20px 24px;
+      box-shadow: var(--sh2);
+    }
+    .why-float .fn { font-size: 2.2rem; font-weight: 900; color: var(--cyan); line-height: 1; }
+    .why-float .fl { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .why-items { display: flex; flex-direction: column; gap: 16px; margin-top: 36px; }
+    .why-item { display: flex; gap: 18px; align-items: flex-start; }
+    .wi-icon {
+      width: 44px; height: 44px; min-width: 44px; border-radius: 10px;
+      background: rgba(0,112,224,0.1); display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: var(--blue);
+    }
+    .why-item h4 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+    .why-item p { font-size: 0.86rem; color: var(--gray); line-height: 1.6; }
+    @media (max-width:860px) { .why-grid { grid-template-columns: 1fr; } .why-img-wrap { display: none; } }
+
+    /* ═══════════════════════════════════════
+       GALLERY
+    ═══════════════════════════════════════ */
+    .gallery-section { background: var(--navy); padding: 96px 5%; }
+    .gallery-head { margin-bottom: 52px; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .gallery-item { position: relative; overflow: hidden; border-radius: 8px; }
+    .gallery-item.tall { grid-row: span 2; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; min-height: 200px; }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-item .g-overlay {
+      position: absolute; inset: 0;
+      background: rgba(10,22,40,0.55); opacity: 0; transition: opacity 0.3s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-item:hover .g-overlay { opacity: 1; }
+    .g-overlay i { font-size: 1.6rem; color: var(--cyan); }
+    @media (max-width:700px) { .gallery-grid { grid-template-columns: 1fr 1fr; } .gallery-item.tall { grid-row: span 1; } }
+
+    /* ═══════════════════════════════════════
+       REVIEWS
+    ═══════════════════════════════════════ */
+    .reviews-section { background: var(--bone); padding: 96px 5%; }
+    .reviews-section .sec-tag { color: var(--blue); }
+    .reviews-section .sec-title { color: var(--text); }
+    .reviews-section .sec-sub { color: var(--gray); }
+    .reviews-head { text-align: center; margin-bottom: 52px; }
+    .reviews-head .sec-sub { margin: 0 auto; }
+    .rating-pill {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: white; border-radius: 100px; padding: 10px 24px; margin-top: 16px;
+      box-shadow: var(--sh); font-size: 0.9rem;
+    }
+    .rating-pill .stars { color: var(--gold); letter-spacing: 2px; }
+    .rating-pill strong { color: var(--text); }
+    .rating-pill em { font-style: normal; color: var(--gray); }
+    .review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; max-width: 1280px; margin: 0 auto; }
+    .review-card { background: white; border-radius: var(--r); padding: 1.6rem; box-shadow: var(--sh); transition: transform 0.25s, box-shadow 0.25s; }
+    .review-card:hover { transform: translateY(-4px); box-shadow: var(--sh2); }
+    .rc-stars { color: var(--gold); font-size: 0.88rem; letter-spacing: 2px; margin-bottom: 14px; }
+    .review-card blockquote { font-size: 0.93rem; line-height: 1.75; color: var(--text); margin-bottom: 20px; font-style: italic; }
+    .rc-divider { height: 1px; background: #e8edf3; margin-bottom: 16px; }
+    .rc-author { display: flex; align-items: center; gap: 12px; }
+    .rc-av { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: white; }
+    .rc-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .rc-meta { font-size: 0.76rem; color: var(--gray); margin-top: 2px; }
+
+    /* ═══════════════════════════════════════
+       CTA
+    ═══════════════════════════════════════ */
+    .cta-section {
+      background: var(--navy); padding: 100px 5%; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: url('https://images.unsplash.com/photo-1605658781469-50bcc2522522?w=1920&q=80&fit=crop') center/cover no-repeat;
+      opacity: 0.12;
+    }
+    .cta-section > * { position: relative; z-index: 1; }
+    .cta-section .sec-title { color: white; margin-bottom: 14px; }
+    .cta-section p { font-size: 1.1rem; color: rgba(255,255,255,0.7); margin-bottom: 36px; }
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    footer { background: var(--footer); padding: 56px 5% 28px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 56px; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .f-brand p { font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.75; max-width: 300px; margin-top: 16px; }
+    .f-col h4 { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 18px; }
+    .f-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .f-col ul a { text-decoration: none; font-size: 0.9rem; color: rgba(255,255,255,0.6); transition: color 0.2s; }
+    .f-col ul a:hover { color: var(--cyan); }
+    .f-col ul li { font-size: 0.9rem; color: rgba(255,255,255,0.6); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+    @media (max-width:860px) { .footer-top { grid-template-columns: 1fr; gap: 32px; } }
+
+    /* ═══════════════════════════════════════
+       REVEAL
+    ═══════════════════════════════════════ */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ INTRO SPLASH ═══════════════════ -->
+<div id="intro">
+  <div class="intro-glow"></div>
+  <div class="intro-logo-wrap">
+    <!-- Santos Logo — large version for splash -->
+    <svg class="santos-logo-svg" width="280" height="72" viewBox="0 0 280 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Water drop icon -->
+      <path d="M26 8 C26 8 12 28 12 38 a14 14 0 0 0 28 0 C40 28 26 8 26 8Z" fill="#00c2ff"/>
+      <path d="M20 38 Q26 44 32 38" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- Spray lines -->
+      <line x1="44" y1="26" x2="54" y2="22" stroke="#00c2ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <line x1="44" y1="32" x2="56" y2="32" stroke="#00c2ff" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      <line x1="44" y1="38" x2="54" y2="42" stroke="#00c2ff" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+      <!-- SANTOS text -->
+      <text x="64" y="48" font-family="Inter, sans-serif" font-weight="900" font-size="34" fill="white" letter-spacing="5">SANTOS</text>
+      <!-- Subtext -->
+      <text x="65" y="64" font-family="Inter, sans-serif" font-weight="700" font-size="11" fill="rgba(0,194,255,0.8)" letter-spacing="6">PRESSURE WASHING</text>
+    </svg>
+  </div>
+  <div class="intro-tagline">Northern California · Open 24 Hours</div>
+</div>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <svg class="santos-logo-svg" width="160" height="42" viewBox="0 0 160 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 4 C15 4 7 16 7 22 a8 8 0 0 0 16 0 C23 16 15 4 15 4Z" fill="#00c2ff"/>
+      <path d="M11 22 Q15 26 19 22" stroke="rgba(255,255,255,0.4)" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <line x1="26" y1="14" x2="32" y2="11" stroke="#00c2ff" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+      <line x1="26" y1="18" x2="33" y2="18" stroke="#00c2ff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+      <line x1="26" y1="22" x2="32" y2="25" stroke="#00c2ff" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+      <text x="38" y="28" font-family="Inter, sans-serif" font-weight="900" font-size="20" fill="white" letter-spacing="3">SANTOS</text>
+      <text x="39" y="39" font-family="Inter, sans-serif" font-weight="700" font-size="7" fill="rgba(0,194,255,0.75)" letter-spacing="4">PRESSURE WASHING</text>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Find Us</a></li>
+  </ul>
+  <a href="tel:5306850474" class="nav-call"><i class="fa-solid fa-phone"></i> Call Now</a>
+  <button id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="fa-solid fa-star"></i> 5.0 Google Rating &nbsp;|&nbsp; Open 24 Hours &nbsp;|&nbsp; Northern California
+    </div>
+    <h1>We Make Your<br>Property <em>Spotless.</em></h1>
+    <p class="hero-sub">Professional pressure washing for driveways, homes, decks, roofs, and more. Santos Pressure Washing brings the clean — any time, day or night.</p>
+    <div class="hero-btns">
+      <a href="tel:5306850474" class="btn-blue"><i class="fa-solid fa-phone"></i> (530) 685-0474</a>
+      <a href="#services" class="btn-ghost"><i class="fa-solid fa-list"></i> View Services</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <i class="fa-solid fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- ═══════════════════ TRUST STRIP ═══════════════════ -->
+<div class="trust">
+  <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Licensed &amp; Insured</div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><i class="fa-solid fa-star"></i> 5.0 Google Rating</div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><i class="fa-solid fa-clock"></i> Open 24 Hours</div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><i class="fa-solid fa-location-dot"></i> Northern California</div>
+  <div class="trust-div"></div>
+  <div class="trust-item"><i class="fa-solid fa-droplet"></i> Eco-Friendly Products</div>
+</div>
+
+<!-- ═══════════════════ STATS ═══════════════════ -->
+<div class="stats">
+  <div class="stat-item"><div class="stat-num">5.0★</div><div class="stat-label">Google Rating</div></div>
+  <div class="stat-item"><div class="stat-num">8+</div><div class="stat-label">Happy Clients</div></div>
+  <div class="stat-item"><div class="stat-num">6+</div><div class="stat-label">Services Offered</div></div>
+  <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Available</div></div>
+</div>
+
+<!-- ═══════════════════ BEFORE & AFTER ═══════════════════ -->
+<section class="ba-section" id="results">
+  <div class="ba-head reveal">
+    <div class="sec-tag">Real Results</div>
+    <h2 class="sec-title">Before &amp; After</h2>
+    <p class="sec-sub">Drag the slider to see the difference a Santos clean makes. These are real results from real jobs.</p>
+  </div>
+  <div class="ba-grid">
+    <!-- Slider 1: Driveway -->
+    <div class="reveal d1">
+      <div class="ba-label"><i class="fa-solid fa-arrows-left-right"></i> &nbsp;Drag to compare — Driveway Clean</div>
+      <div class="ba-container" id="ba1">
+        <img class="ba-img"
+          src="https://images.unsplash.com/photo-1632475855984-dc56de2af5f5?w=900&q=85&fit=crop"
+          alt="Before - dirty driveway"
+          onerror="this.src='https://images.unsplash.com/photo-1586501599751-58c582c907d7?w=900&q=85&fit=crop'"
+        />
+        <img class="ba-img ba-after"
+          src="https://images.unsplash.com/photo-1541607104581-dd9b0a8ee925?w=900&q=85&fit=crop"
+          alt="After - clean driveway"
+          onerror="this.src='https://images.unsplash.com/photo-1605146768851-eda79da39897?w=900&q=85&fit=crop'"
+        />
+        <div class="ba-divider" id="div1"></div>
+        <div class="ba-handle" id="hdl1"><i class="fa-solid fa-arrows-left-right"></i></div>
+        <input type="range" class="ba-range" id="range1" min="0" max="100" value="50" />
+        <div class="ba-tags">
+          <span class="ba-tag before">Before</span>
+          <span class="ba-tag after">After</span>
+        </div>
+      </div>
+    </div>
+    <!-- Slider 2: House Wash -->
+    <div class="reveal d2">
+      <div class="ba-label"><i class="fa-solid fa-arrows-left-right"></i> &nbsp;Drag to compare — House Wash</div>
+      <div class="ba-container" id="ba2">
+        <img class="ba-img"
+          src="https://images.unsplash.com/photo-1682142564647-6f4396a34d02?w=900&q=85&fit=crop"
+          alt="Before - dirty house"
+          onerror="this.src='https://images.unsplash.com/photo-1605658781469-50bcc2522522?w=900&q=85&fit=crop'"
+        />
+        <img class="ba-img ba-after"
+          src="https://images.unsplash.com/photo-1560170412-0f7df0eb0fb1?w=900&q=85&fit=crop"
+          alt="After - clean house"
+          onerror="this.src='https://images.unsplash.com/photo-1564636411045-10f68d6d2b4a?w=900&q=85&fit=crop'"
+        />
+        <div class="ba-divider" id="div2"></div>
+        <div class="ba-handle" id="hdl2"><i class="fa-solid fa-arrows-left-right"></i></div>
+        <input type="range" class="ba-range" id="range2" min="0" max="100" value="50" />
+        <div class="ba-tags">
+          <span class="ba-tag before">Before</span>
+          <span class="ba-tag after">After</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SERVICES ═══════════════════ -->
+<section class="services-section" id="services">
+  <div class="reveal">
+    <div class="sec-tag">What We Do</div>
+    <h2 class="sec-title">Our Services</h2>
+    <p class="sec-sub">From driveways to rooftops, Santos handles it all — with professional equipment and attention to every surface.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card reveal">
+      <img class="svc-img" src="https://images.unsplash.com/photo-1605146768851-eda79da39897?w=600&q=80&fit=crop" alt="Driveway cleaning"
+           onerror="this.src='https://images.unsplash.com/photo-1541607104581-dd9b0a8ee925?w=600&q=80&fit=crop'" />
+      <div class="svc-body">
+        <span class="svc-icon">🏠</span>
+        <h3>Driveway &amp; Concrete</h3>
+        <p>Blast away oil stains, dirt, and grime from concrete driveways, sidewalks, and patios. Restored to like-new condition.</p>
+        <span class="svc-badge">Most Popular</span>
+      </div>
+    </div>
+    <div class="svc-card reveal d1">
+      <img class="svc-img" src="https://images.unsplash.com/photo-1682142564647-6f4396a34d02?w=600&q=80&fit=crop" alt="House washing"
+           onerror="this.src='https://images.unsplash.com/photo-1560170412-0f7df0eb0fb1?w=600&q=80&fit=crop'" />
+      <div class="svc-body">
+        <span class="svc-icon">🏡</span>
+        <h3>House Washing</h3>
+        <p>Soft wash or pressure wash your home's exterior — removing mold, mildew, and years of buildup from siding and stucco.</p>
+        <span class="svc-badge">High ROI</span>
+      </div>
+    </div>
+    <div class="svc-card reveal d2">
+      <img class="svc-img" src="https://images.unsplash.com/photo-1564636411045-10f68d6d2b4a?w=600&q=80&fit=crop" alt="Deck cleaning"
+           onerror="this.src='https://images.unsplash.com/photo-1586501599751-58c582c907d7?w=600&q=80&fit=crop'" />
+      <div class="svc-body">
+        <span class="svc-icon">🪵</span>
+        <h3>Deck &amp; Fence Washing</h3>
+        <p>Restore the natural look of wood and composite decks, fences, and pergolas. Remove algae, stains, and gray weathering.</p>
+      </div>
+    </div>
+    <div class="svc-card reveal">
+      <img class="svc-img" src="https://images.unsplash.com/photo-1560170412-0f7df0eb0fb1?w=600&q=80&fit=crop" alt="Roof washing"
+           onerror="this.src='https://images.unsplash.com/photo-1632475855984-dc56de2af5f5?w=600&q=80&fit=crop'" />
+      <div class="svc-body">
+        <span class="svc-icon">🏗️</span>
+        <h3>Roof Soft Wash</h3>
+        <p>Low-pressure soft washing removes black streaks, moss, and algae from roofs safely — no damage, no void warranties.</p>
+      </div>
+    </div>
+    <div class="svc-card reveal d1">
+      <img class="svc-img" src="https://images.unsplash.com/photo-1605658781469-50bcc2522522?w=600&q=80&fit=crop" alt="Commercial cleaning"
+           onerror="this.src='https://images.unsplash.com/photo-1605146768851-eda79da39897?w=600&q=80&fit=crop'" />
+      <div class="svc-body">
+        <span class="svc-icon">🏢</span>
+        <h3>Commercial Cleaning</h3>
+        <p>Storefronts, parking lots, warehouses — we clean commercial properties to keep your business looking professional.</p>
+      </div>
+    </div>
+    <div class="svc-card reveal d2">
+      <img class="svc-img" src="https://images.unsplash.com/photo-1541607104581-dd9b0a8ee925?w=600&q=80&fit=crop" alt="Gutter cleaning"
+           onerror="this.src='https://images.unsplash.com/photo-1564636411045-10f68d6d2b4a?w=600&q=80&fit=crop'" />
+      <div class="svc-body">
+        <span class="svc-icon">🌀</span>
+        <h3>Gutter Cleaning</h3>
+        <p>Full gutter flush and brightening service. We clear blockages and clean the exterior face of gutters inside and out.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ WHY US ═══════════════════ -->
+<section class="why-section" id="about">
+  <div class="why-grid">
+    <div class="why-img-wrap reveal">
+      <img class="why-img"
+        src="https://images.unsplash.com/photo-1586501599751-58c582c907d7?w=900&q=85&fit=crop"
+        alt="Santos Pressure Washing at work"
+        onerror="this.src='https://images.unsplash.com/photo-1605146768851-eda79da39897?w=900&q=85&fit=crop'"
+      />
+      <div class="why-float">
+        <div class="fn">5.0★</div>
+        <div class="fl">Perfect Google Rating</div>
+      </div>
+    </div>
+    <div class="reveal d2">
+      <div class="sec-tag">Why Choose Santos</div>
+      <h2 class="sec-title">Northern California's Trusted Pressure Washing</h2>
+      <p class="sec-sub">Santos Pressure Washing is built on results and reputation — every job is treated like it's our own property.</p>
+      <div class="why-items">
+        <div class="why-item">
+          <div class="wi-icon"><i class="fa-solid fa-clock"></i></div>
+          <div>
+            <h4>Open 24 Hours, 7 Days a Week</h4>
+            <p>Morning, night, weekday or weekend — we work around your schedule, not the other way around.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="wi-icon"><i class="fa-solid fa-star"></i></div>
+          <div>
+            <h4>5.0 Star Google Rating</h4>
+            <p>Every single review is 5 stars. Our clients don't just come back — they tell their neighbors.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="wi-icon"><i class="fa-solid fa-leaf"></i></div>
+          <div>
+            <h4>Eco-Friendly &amp; Safe</h4>
+            <p>We use biodegradable detergents that are safe for your landscaping, pets, and the environment.</p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="wi-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div>
+            <h4>Fully Licensed &amp; Insured</h4>
+            <p>You're fully protected on every job — no liability, no stress, no corners cut.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ GALLERY ═══════════════════ -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-head reveal">
+    <div>
+      <div class="sec-tag">Recent Projects</div>
+      <h2 class="sec-title">Our Work</h2>
+    </div>
+    <p class="sec-sub" style="color:rgba(255,255,255,0.6)">Every property we touch gets the same attention — here's proof.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item tall reveal">
+      <img src="https://images.unsplash.com/photo-1605146768851-eda79da39897?w=700&q=85&fit=crop" alt="Pressure washing work" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d1">
+      <img src="https://images.unsplash.com/photo-1541607104581-dd9b0a8ee925?w=700&q=85&fit=crop" alt="Clean driveway" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d2">
+      <img src="https://images.unsplash.com/photo-1682142564647-6f4396a34d02?w=700&q=85&fit=crop" alt="House washing" loading="lazy"
+           onerror="this.src='https://images.unsplash.com/photo-1605658781469-50bcc2522522?w=700&q=85&fit=crop'" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d1">
+      <img src="https://images.unsplash.com/photo-1560170412-0f7df0eb0fb1?w=700&q=85&fit=crop" alt="Exterior cleaning" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d2">
+      <img src="https://images.unsplash.com/photo-1586501599751-58c582c907d7?w=700&q=85&fit=crop" alt="Driveway wash" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item tall reveal d3">
+      <img src="https://images.unsplash.com/photo-1564636411045-10f68d6d2b4a?w=700&q=85&fit=crop" alt="Deck cleaning" loading="lazy"
+           onerror="this.src='https://images.unsplash.com/photo-1632475855984-dc56de2af5f5?w=700&q=85&fit=crop'" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ REVIEWS ═══════════════════ -->
+<section class="reviews-section" id="reviews">
+  <div class="reviews-head reveal">
+    <div class="sec-tag">5-Star Reviews</div>
+    <h2 class="sec-title">What Our Clients Say</h2>
+    <p class="sec-sub">Every review is 5 stars — see why Northern California trusts Santos.</p>
+    <div class="rating-pill">
+      <span class="stars">★★★★★</span>
+      <strong>5.0</strong>
+      <em>· 8 Google Reviews</em>
+    </div>
+  </div>
+  <div class="review-grid">
+    <div class="review-card reveal">
+      <div class="rc-stars">★★★★★</div>
+      <blockquote>"My driveway looked brand new after Santos came out. He was fast, professional, and available same day. I've already recommended him to three neighbors."</blockquote>
+      <div class="rc-divider"></div>
+      <div class="rc-author">
+        <div class="rc-av">M</div>
+        <div><div class="rc-name">Maria G.</div><div class="rc-meta">Northern California · Google Review</div></div>
+      </div>
+    </div>
+    <div class="review-card reveal d1">
+      <div class="rc-stars">★★★★★</div>
+      <blockquote>"Called at 9pm and he was there the next morning. My patio and fence look incredible — years of grime gone in an hour. Worth every penny and then some."</blockquote>
+      <div class="rc-divider"></div>
+      <div class="rc-author">
+        <div class="rc-av">J</div>
+        <div><div class="rc-name">James T.</div><div class="rc-meta">Northern California · Google Review</div></div>
+      </div>
+    </div>
+    <div class="review-card reveal d2">
+      <div class="rc-stars">★★★★★</div>
+      <blockquote>"Did my entire house, driveway, and back deck. He was thorough, careful around my plants, and the results were unbelievable. Will 100% be calling again."</blockquote>
+      <div class="rc-divider"></div>
+      <div class="rc-author">
+        <div class="rc-av">R</div>
+        <div><div class="rc-name">Rachel M.</div><div class="rc-meta">Northern California · Google Review</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CTA ═══════════════════ -->
+<section class="cta-section" id="contact">
+  <div class="cta-bg"></div>
+  <div class="sec-tag">Get a Free Quote</div>
+  <h2 class="sec-title">Ready for a <em style="font-style:normal;color:var(--cyan)">Fresh Start?</em></h2>
+  <p>Call Santos now — available 24/7, no job too big or small.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+    <a href="tel:5306850474" class="btn-blue" style="font-size:1.1rem;padding:16px 40px;">
+      <i class="fa-solid fa-phone"></i> (530) 685-0474
+    </a>
+    <a href="#services" class="btn-ghost" style="font-size:1.1rem;padding:16px 36px;">
+      <i class="fa-solid fa-list"></i> View Services
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="f-brand">
+      <svg class="santos-logo-svg" width="140" height="36" viewBox="0 0 140 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 3 C13 3 6 14 6 19 a7 7 0 0 0 14 0 C20 14 13 3 13 3Z" fill="#00c2ff"/>
+        <line x1="22" y1="12" x2="27" y2="10" stroke="#00c2ff" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        <line x1="22" y1="16" x2="28" y2="16" stroke="#00c2ff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="22" y1="20" x2="27" y2="22" stroke="#00c2ff" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+        <text x="33" y="24" font-family="Inter, sans-serif" font-weight="900" font-size="18" fill="white" letter-spacing="3">SANTOS</text>
+        <text x="34" y="34" font-family="Inter, sans-serif" font-weight="700" font-size="6.5" fill="rgba(0,194,255,0.7)" letter-spacing="3.5">PRESSURE WASHING</text>
+      </svg>
+      <p>Professional pressure washing for homeowners and businesses throughout Northern California. Open 24 hours — call any time.</p>
+    </div>
+    <div class="f-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#services">Driveway &amp; Concrete</a></li>
+        <li><a href="#services">House Washing</a></li>
+        <li><a href="#services">Deck &amp; Fence</a></li>
+        <li><a href="#services">Roof Soft Wash</a></li>
+        <li><a href="#services">Commercial</a></li>
+        <li><a href="#services">Gutter Cleaning</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:5306850474">(530) 685-0474</a></li>
+        <li>Northern California</li>
+        <li style="color:rgba(0,194,255,0.7);margin-top:6px;">Open 24 Hours · 7 Days</li>
+        <li style="margin-top:8px;">Free Estimates</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Santos Pressure Washing · Northern California</p>
+    <p>Demo site</p>
+  </div>
+</footer>
+
+<script>
+  // ── Reveal on scroll
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // ── Before/After sliders
+  function initSlider(rangeId, afterId, divId, hdlId) {
+    const range = document.getElementById(rangeId);
+    const after = document.querySelector('#' + afterId + ' .ba-after');
+    const divider = document.getElementById(divId);
+    const handle  = document.getElementById(hdlId);
+    if (!range || !after) return;
+    function update(v) {
+      const pct = v + '%';
+      after.style.clipPath = `inset(0 ${100 - v}% 0 0)`;
+      divider.style.left = pct;
+      handle.style.left  = pct;
+    }
+    range.addEventListener('input', () => update(range.value));
+    update(50);
+  }
+  initSlider('range1','ba1','div1','hdl1');
+  initSlider('range2','ba2','div2','hdl2');
+
+  // ── Hamburger
+  document.getElementById('hamburger').addEventListener('click', function() {
+    const links = document.querySelector('.nav-links');
+    if (links.style.display === 'flex') {
+      links.style.display = '';
+    } else {
+      links.style.cssText = 'display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--navy);padding:20px 5%;gap:20px;border-bottom:1px solid rgba(255,255,255,0.08);z-index:899;';
+    }
+  });
+</script>
+</body>
+</html>
