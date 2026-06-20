@@ -119,19 +119,25 @@
     ═══════════════════════════════════════ */
     .hero {
       min-height: 94vh; position: relative;
-      display: flex; align-items: center;
+      display: flex; align-items: center; justify-content: center;
       padding: 80px 5% 80px; overflow: hidden;
     }
-    .hero-bg {
-      position: absolute; inset: 0; z-index: 0;
-      background:
-        linear-gradient(110deg, rgba(10,22,40,0.92) 40%, rgba(10,22,40,0.45) 100%),
-        url('https://images.unsplash.com/photo-1605146768851-eda79da39897?w=1920&q=85&fit=crop') center/cover no-repeat;
-      transform: scale(1.04);
-      transition: transform 8s ease;
+    .hero-slides { position: absolute; inset: 0; z-index: 0; }
+    .hero-slide {
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      opacity: 0; animation: heroSlide 25s infinite;
     }
-    .hero:hover .hero-bg { transform: scale(1.0); }
-    .hero-content { position: relative; z-index: 1; max-width: 720px; }
+    .hero-slide::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(110deg, rgba(10,22,40,.55) 25%, rgba(10,22,40,.2) 100%);
+    }
+    .hero-slide:nth-child(1) { background-image: url('assets/gal1.jpg'); animation-delay: 0s; }
+    .hero-slide:nth-child(2) { background-image: url('assets/gal6.jpg'); animation-delay: 5s; }
+    .hero-slide:nth-child(3) { background-image: url('assets/gal3.jpg'); animation-delay: 10s; }
+    .hero-slide:nth-child(4) { background-image: url('assets/gal4.webp'); animation-delay: 15s; }
+    .hero-slide:nth-child(5) { background-image: url('assets/gal5.webp'); animation-delay: 20s; }
+    @keyframes heroSlide { 0%{opacity:0} 5%{opacity:1} 20%{opacity:1} 25%{opacity:0} 100%{opacity:0} }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; text-align: center; display: flex; flex-direction: column; align-items: center; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 10px;
       background: rgba(0,112,224,0.2); border: 1px solid rgba(0,194,255,0.3);
@@ -145,7 +151,7 @@
     }
     .hero h1 em { font-style: normal; color: var(--cyan); }
     .hero-sub { font-size: 1.08rem; color: rgba(255,255,255,0.8); max-width: 500px; line-height: 1.7; margin-bottom: 36px; }
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .btn-blue {
       display: inline-flex; align-items: center; gap: 9px;
       background: var(--blue); color: white; padding: 15px 32px; border-radius: 8px;
@@ -296,6 +302,23 @@
     .why-item h4 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
     .why-item p { font-size: 0.86rem; color: var(--gray); line-height: 1.6; }
     @media (max-width:860px) { .why-grid { grid-template-columns: 1fr; } .why-img-wrap { display: none; } }
+
+    /* ── BEFORE & AFTER ── */
+    .ba-section{background:var(--navy);padding:4.5rem 5%}
+    .ba-section .sec-tag{color:var(--cyan)}
+    .ba-section .sec-title{color:#fff}
+    .ba-section .sec-sub{color:rgba(255,255,255,.6)}
+    .ba-pairs{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:1000px;margin:0 auto}
+    @media(max-width:700px){.ba-pairs{grid-template-columns:1fr}}
+    .ba-wrap{display:flex;flex-direction:column;gap:.6rem}
+    .ba-lbl{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.3rem;display:block}
+    .ba-container{position:relative;width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.45);cursor:ew-resize;user-select:none}
+    .ba-img{position:absolute;top:0;left:-100%;width:200%;height:100%;max-width:none;object-fit:cover}
+    .ba-after-wrap{position:absolute;inset:0;overflow:hidden;clip-path:inset(0 50% 0 0)}
+    .ba-after-img{position:absolute;top:0;left:0;width:200%;height:100%;max-width:none;object-fit:cover}
+    .ba-divider{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);width:2px;background:#fff;z-index:3;pointer-events:none;box-shadow:0 0 8px rgba(0,0,0,.5)}
+    .ba-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(255,255,255,.95);border-radius:50%;box-shadow:0 2px 12px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:4;transition:none}
+    .ba-range{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;z-index:5;margin:0}
 
     /* ═══════════════════════════════════════
        GALLERY
@@ -527,13 +550,16 @@
 
 <!-- ═══════════════════ HERO ═══════════════════ -->
 <section class="hero" id="home">
-  <div class="hero-bg"></div>
+  <div class="hero-slides" aria-hidden="true">
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+  </div>
   <div class="hero-content">
-    <div class="hero-badge">
-      <i class="fa-solid fa-star"></i> 5.0 Google Rating &nbsp;|&nbsp; Open 24 Hours &nbsp;|&nbsp; Northern California
-    </div>
-    <h1>We Make Your<br>Property <em>Spotless.</em></h1>
-    <p class="hero-sub">Professional pressure washing for driveways, homes, decks, roofs, and more. Santos Pressure Washing brings the clean — any time, day or night.</p>
+    <h1 style="font-size:clamp(2.6rem,6.5vw,4.8rem);margin-bottom:.3rem">Santos Pressure Washing</h1>
+    <p style="font-size:clamp(1rem,2.2vw,1.4rem);color:rgba(255,255,255,.65);letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:2.2rem">Northern California</p>
     <div class="hero-btns">
       <a href="tel:5306850474" class="btn-blue"><i class="fa-solid fa-phone"></i> (530) 685-0474</a>
       <a href="#services" class="btn-ghost"><i class="fa-solid fa-list"></i> View Services</a>
@@ -711,6 +737,71 @@
   </div>
 </section>
 
+<!-- ═══════════════════ BEFORE & AFTER ═══════════════════ -->
+<section class="ba-section" id="before-after">
+  <div class="sec-tag">Proof of Work</div>
+  <h2 class="sec-title" style="color:#fff">Before & After</h2>
+  <p class="sec-sub" style="color:rgba(255,255,255,.6);margin-bottom:2.5rem">Drag the slider to see the difference professional pressure washing makes.</p>
+  <div class="ba-pairs">
+    <div class="ba-wrap">
+      <span class="ba-lbl">Wood Deck</span>
+      <div class="ba-container" id="ba1">
+        <img class="ba-img" src="assets/ba1.jpg" alt="After" />
+        <div class="ba-after-wrap" id="ba1-after">
+          <img class="ba-after-img" src="assets/ba1.jpg" alt="Before" />
+        </div>
+        <div class="ba-divider" id="ba1-div"></div>
+        <div class="ba-btn" id="ba1-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070e0" stroke-width="2.5"><polyline points="8 4 2 12 8 20"/><polyline points="16 4 22 12 16 20"/></svg>
+        </div>
+        <input type="range" class="ba-range" id="ba1-range" min="0" max="100" value="50" aria-label="Comparison slider" />
+      </div>
+    </div>
+    <div class="ba-wrap">
+      <span class="ba-lbl">Brick Walkway</span>
+      <div class="ba-container" id="ba2">
+        <img class="ba-img" src="assets/ba3.jpg" alt="After" />
+        <div class="ba-after-wrap" id="ba2-after">
+          <img class="ba-after-img" src="assets/ba3.jpg" alt="Before" />
+        </div>
+        <div class="ba-divider" id="ba2-div"></div>
+        <div class="ba-btn" id="ba2-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070e0" stroke-width="2.5"><polyline points="8 4 2 12 8 20"/><polyline points="16 4 22 12 16 20"/></svg>
+        </div>
+        <input type="range" class="ba-range" id="ba2-range" min="0" max="100" value="50" aria-label="Comparison slider" />
+      </div>
+    </div>
+    <div class="ba-wrap">
+      <span class="ba-lbl">Brick Steps</span>
+      <div class="ba-container" id="ba3">
+        <img class="ba-img" src="assets/ba2.jpg" alt="After" />
+        <div class="ba-after-wrap" id="ba3-after">
+          <img class="ba-after-img" src="assets/ba2.jpg" alt="Before" />
+        </div>
+        <div class="ba-divider" id="ba3-div"></div>
+        <div class="ba-btn" id="ba3-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070e0" stroke-width="2.5"><polyline points="8 4 2 12 8 20"/><polyline points="16 4 22 12 16 20"/></svg>
+        </div>
+        <input type="range" class="ba-range" id="ba3-range" min="0" max="100" value="50" aria-label="Comparison slider" />
+      </div>
+    </div>
+    <div class="ba-wrap">
+      <span class="ba-lbl">House Exterior</span>
+      <div class="ba-container" id="ba4">
+        <img class="ba-img" src="assets/ba4.jpg" alt="After" />
+        <div class="ba-after-wrap" id="ba4-after">
+          <img class="ba-after-img" src="assets/ba4.jpg" alt="Before" />
+        </div>
+        <div class="ba-divider" id="ba4-div"></div>
+        <div class="ba-btn" id="ba4-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070e0" stroke-width="2.5"><polyline points="8 4 2 12 8 20"/><polyline points="16 4 22 12 16 20"/></svg>
+        </div>
+        <input type="range" class="ba-range" id="ba4-range" min="0" max="100" value="50" aria-label="Comparison slider" />
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════ WHY US ═══════════════════ -->
 <section class="why-section" id="about">
   <div class="why-grid">
@@ -799,6 +890,30 @@
     </div>
     <div class="gallery-item tall reveal d3">
       <img src="https://images.unsplash.com/photo-1541607104581-dd9b0a8ee925?w=700&q=85&fit=crop" alt="Clean concrete" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal">
+      <img src="assets/gal1.jpg" alt="Pressure washing house siding" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d1">
+      <img src="assets/gal6.jpg" alt="Concrete nozzle cleaning" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d2">
+      <img src="assets/gal3.jpg" alt="Pressure washing pavers" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item tall reveal d1">
+      <img src="assets/gal2.webp" alt="Deck pressure washing" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d2">
+      <img src="assets/gal4.webp" alt="Brick wall cleaning" loading="lazy" />
+      <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
+    </div>
+    <div class="gallery-item reveal d3">
+      <img src="assets/gal5.webp" alt="House exterior washing" loading="lazy" />
       <div class="g-overlay"><i class="fa-regular fa-eye"></i></div>
     </div>
   </div>
@@ -971,6 +1086,33 @@
 </footer>
 
 <script>
+  // ── Before & After Sliders
+  function initSplitSlider(cId, aId, dId, bId, rId) {
+    var c = document.getElementById(cId);
+    var a = document.getElementById(aId);
+    var d = document.getElementById(dId);
+    var b = document.getElementById(bId);
+    var r = document.getElementById(rId);
+    if (!c || !a || !d || !r) return;
+    function slide(v) {
+      a.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+      d.style.left = v + '%';
+      if (b) b.style.left = v + '%';
+    }
+    r.addEventListener('input', function() { slide(r.value); });
+    c.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      var rect = c.getBoundingClientRect();
+      var pct = Math.max(0, Math.min(100, (e.touches[0].clientX - rect.left) / rect.width * 100));
+      r.value = pct; slide(pct);
+    }, { passive: false });
+    slide(50);
+  }
+  initSplitSlider('ba1','ba1-after','ba1-div','ba1-btn','ba1-range');
+  initSplitSlider('ba2','ba2-after','ba2-div','ba2-btn','ba2-range');
+  initSplitSlider('ba3','ba3-after','ba3-div','ba3-btn','ba3-range');
+  initSplitSlider('ba4','ba4-after','ba4-div','ba4-btn','ba4-range');
+
   // ── Reveal on scroll
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
